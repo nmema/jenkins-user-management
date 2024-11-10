@@ -1,0 +1,6 @@
+jenkins:
+  systemMessage: "Jenkins configured automatically by Jenkins Configuration as Code plugin\n\n"
+
+jobs:
+  - script: >
+      folder('UserManagement')
