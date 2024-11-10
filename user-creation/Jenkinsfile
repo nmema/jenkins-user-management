@@ -24,18 +24,20 @@ pipeline {
         stage('Create User') {
             steps {
                 script {
-                    TEMP_PASSWORD=$(openssl rand -base64 10)
-                    ENCR_PASSWORD=$(openssl passwd -1 $TEMP_PASSWORD)
+                    sh """
+                        TEMP_PASSWORD=$(openssl rand -base64 10)
+                        ENCR_PASSWORD=$(openssl passwd -1 $TEMP_PASSWORD)
 
-                    sudo useradd ${params.login} \
-                        -m -s /bin/bash -d /home/${params.login} \
-                        -c "${params.name},${params.department}" \
-                        -p $ENCR_PASSWORD
+                        sudo useradd ${params.login} \
+                            -m -s /bin/bash -d /home/${params.login} \
+                            -c "${params.name},${params.department}" \
+                            -p $ENCR_PASSWORD
 
-                    sudo chage -d 0 ${params.login}
-                
-                    echo "User ${params.login} created"
-                    echo "Password: ${TEMP_PASSWORD}"
+                        sudo chage -d 0 ${params.login}
+                    
+                        echo "User ${params.login} created"
+                        echo "Password: ${TEMP_PASSWORD}"
+                    """
                 }
             }
         }
