@@ -7,34 +7,40 @@ jobs:
 
   - script: >
       pipelineJob('UserManagement/UserCreation') {
-          definition {
-              cpsScm {
-                  scm {
-                      git {
-                          remote {
-                              url('https://github.com/nmema/jenkins-user-management.git')
-                          }
-                          branches('*/1-feature-job-creation-script')
-                      }
-                      scriptPath('user-creation/Jenkinsfile')
-                  }
+        description('Job that creates user on Linux Server')
+        parameters {
+            stringParam('login', '', 'Username to login into the server')
+            stringParam('name', '', 'First Name and Last Name')
+            choiceParam('department', ['accounting', 'finance', 'technology'], 'Choose department for the user')
+        }
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote {
+                  url('https://github.com/nmema/jenkins-user-management.git')
+                }
+                branches('*/3-feature-user-creation-job')
               }
+              scriptPath('user-creation/Jenkinsfile')
+            }
           }
+        }
       }
 
   - script: >
       pipelineJob('UserManagement/UserDeletion') {
-          definition {
-              cpsScm {
-                  scm {
-                      git {
-                          remote {
-                              url('https://github.com/nmema/jenkins-user-management.git')
-                          }
-                          branches('*/1-feature-job-creation-script')
-                      }
-                      scriptPath('user-deletion/Jenkinsfile')
-                  }
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote {
+                  url('https://github.com/nmema/jenkins-user-management.git')
+                }
+                branches('*/3-feature-user-creation-job')
               }
+              scriptPath('user-deletion/Jenkinsfile')
+            }
           }
+        }
       }
