@@ -1,7 +1,24 @@
 pipeline {
     agent any
-
+    parameters {
+        string(name: 'login', defaultValue: '', description: 'Username to login into the server')
+        string(name: 'name', defaultValue: '', description: 'First Name and Last Name')
+        choice(name: 'department', choices: ['accounting', 'finance', 'technology'], description: 'Choose department for the user')
+    }
     stages {
+        stage('Validation') {
+            steps {
+                if (!params.login) {
+                    error "Parameter 'login' is required."
+                }
+                if (!params.name) {
+                    error "Parameter 'name' is required."
+                }
+                if (!params.department) {
+                    error "Parameter 'department' is required."
+                }
+            }
+        }
         stage('Build') {
             steps {
                 echo 'Building..'
