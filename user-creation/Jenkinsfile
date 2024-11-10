@@ -1,20 +1,46 @@
 pipeline {
     agent any
-
+    parameters {
+        string(name: 'login', defaultValue: '', description: 'Username to login into the server')
+        string(name: 'name', defaultValue: '', description: 'First Name and Last Name')
+        choice(name: 'department', choices: ['accounting', 'finance', 'technology'], description: 'Choose department for the user')
+    }
     stages {
-        stage('Build') {
+        stage('Validation') {
             steps {
-                echo 'Building..'
+                script {
+                    if (!params.login) {
+                        error "Parameter 'login' is required."
+                    }
+                    if (!params.name) {
+                        error "Parameter 'name' is required."
+                    }
+                    if (!params.department) {
+                        error "Parameter 'department' is required."
+                    }
+                }
             }
         }
-        stage('Test') {
+        stage('Create User') {
             steps {
-                echo 'Testing..'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
+                script {
+
+                    def tempPassword = sh(script: "openssl rand -base64 10", returnStdout: true).trim()
+
+                    sh """
+                        # Create user
+                        sudo useradd ${params.login} \
+                            -m -s /bin/bash -d /home/${params.login} \
+                            -c "${params.name},${params.department}" \
+                            -p \$(echo "${tempPassword}" | openssl passwd -1 -stdin)
+
+                        # Force password change on first login
+                        sudo passwd -e ${params.login}
+                    """
+
+                    echo "User ${params.login} created"
+                    echo "Password: ${tempPassword}"
+                }
             }
         }
     }
