@@ -24,7 +24,7 @@ pipeline {
         stage('Create User') {
             steps {
                 script {
-                    sh """
+                    sh '''
                         TEMP_PASSWORD=$(openssl rand -base64 10)
                         ENCR_PASSWORD=$(openssl passwd -1 $TEMP_PASSWORD)
 
@@ -37,7 +37,7 @@ pipeline {
                     
                         echo "User ${params.login} created"
                         echo "Password: ${TEMP_PASSWORD}"
-                    """
+                    '''
                 }
             }
         }
