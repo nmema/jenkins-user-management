@@ -24,17 +24,18 @@ pipeline {
         stage('Create User') {
             steps {
                 script {
+
                     def tempPassword = sh(script: "openssl rand -base64 10", returnStdout: true).trim()
-                    def encrPassword = sh(script: "openssl passwd -1 ${tempPassword}", returnStdout: true).trim()
 
                     sh """
+                        # Create user
                         sudo useradd ${params.login} \
                             -m -s /bin/bash -d /home/${params.login} \
                             -c "${params.name},${params.department}" \
-                            -p "${encrPassword}"
+                            -p $(echo "${tempPassword}" | openssl passwd -1 -stdin)
 
                         # Force password change on first login
-                        sudo chage -d 0 ${params.login}
+                        sudo passwd -e ${params.login}
                     """
 
                     echo "User ${params.login} created"
