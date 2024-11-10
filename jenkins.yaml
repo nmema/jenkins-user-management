@@ -1,0 +1,40 @@
+jenkins:
+  systemMessage: "Jenkins configured automatically by Jenkins Configuration as Code plugin\n\n"
+
+jobs:
+  - script: >
+      folder('UserManagement')
+
+  - script: >
+      pipelineJob('UserManagement/UserCreation') {
+          definition {
+              cpsScm {
+                  scm {
+                      git {
+                          remote {
+                              url('https://github.com/nmema/jenkins-user-management.git')
+                          }
+                          branches('*/1-feature-job-creation-script')
+                      }
+                      scriptPath('user-creation/Jenkinsfile')
+                  }
+              }
+          }
+      }
+
+  - script: >
+      pipelineJob('UserManagement/UserDeletion') {
+          definition {
+              cpsScm {
+                  scm {
+                      git {
+                          remote {
+                              url('https://github.com/nmema/jenkins-user-management.git')
+                          }
+                          branches('*/1-feature-job-creation-script')
+                      }
+                      scriptPath('user-deletion/Jenkinsfile')
+                  }
+              }
+          }
+      }

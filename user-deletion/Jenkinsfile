@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+    parameters {
+        string(name: 'name', defaultValue: '', description: 'Ingresa un nombre')
+        string(name: 'age', defaultValue: '', description: 'Ingresa tu edad')
+        text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
+        booleanParam(name: 'TOGGLE', defaultValue: true, description: 'Toggle this value')
+        choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
+        password(name: 'PASSWORD', defaultValue: '', description: 'Enter a password')
+        booleanParam(name: 'FLAG', defaultValue: true, description: 'Toggle this value')
+    }
+    environment {
+        // Variables de entorno
+        ENV_VAR = 'Ahmed'
+    }
+    stages {
+        stage('Input') {
+            steps {
+                script {
+                    // Los parametros pueden ser accedidos mediante params.parameterName
+                    echo "Hola, ${env.ENV_VAR}! Tienes ${params.age} de edad."
+                }
+            }
+        }
+    }
+}
