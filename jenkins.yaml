@@ -20,7 +20,7 @@ jobs:
                 remote {
                   url('https://github.com/nmema/jenkins-user-management.git')
                 }
-                branches('*/3-feature-user-creation-job')
+                branches('*/main')
               }
               scriptPath('user-creation/Jenkinsfile')
             }
@@ -37,7 +37,7 @@ jobs:
                 remote {
                   url('https://github.com/nmema/jenkins-user-management.git')
                 }
-                branches('*/3-feature-user-creation-job')
+                branches('*/main')
               }
               scriptPath('user-deletion/Jenkinsfile')
             }
