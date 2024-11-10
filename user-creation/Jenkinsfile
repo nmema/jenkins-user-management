@@ -27,19 +27,15 @@ pipeline {
                     def tempPassword = sh(script: "openssl rand -base64 10", returnStdout: true).trim()
                     def encrPassword = sh(script: "openssl passwd -1 ${tempPassword}", returnStdout: true).trim()
 
-                    sh '''
-                        sudo useradd $LOGIN \
-                            -m -s /bin/bash -d /home/$LOGIN \
-                            -c "$NAME,$DEPARTMENT" \
-                            -p "$ENCR_PASSWORD"
+                    sh """
+                        sudo useradd ${params.login} \
+                            -m -s /bin/bash -d /home/${params.login} \
+                            -c "${params.name},${params.department}" \
+                            -p "${encPassword}"
 
-                        sudo chage -d 0 $LOGIN
-                    ''', env: [
-                        "LOGIN=${params.login}",
-                        "NAME=${params.name}",
-                        "DEPARTMENT=${params.department}",
-                        "ENCR_PASSWORD=${encrPassword}"
-                    ]
+                        # Force password change on first login
+                        sudo chage -d 0 ${params.login}
+                    """
 
                     echo "User ${params.login} created"
                     echo "Password: ${tempPassword}"
