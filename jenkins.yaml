@@ -1,6 +1,18 @@
 jenkins:
   systemMessage: "Jenkins configured automatically by Jenkins Configuration as Code plugin\n\n"
 
+# Folder configuration
+folders:
+  - name: 'UserManagement'
+
+# Jobs within the folder
 jobs:
-  - script: >
-      folder('UserManagement')
+  - name: 'UserManagement/UserCreation'
+    type: 'Pipeline'
+    pipeline:
+      definition: 'SCM'
+      scm:
+        git:
+          url: 'https://github.com/nmema/jenkins-user-management.git'
+          branch: '1-feature-job-creation-script'
+          scriptPath: 'user-creation/Jenkinsfile'
