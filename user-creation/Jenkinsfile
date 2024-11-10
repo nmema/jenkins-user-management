@@ -24,8 +24,8 @@ pipeline {
         stage('Create User') {
             steps {
                 script {
-                    def tempPassword = sh(script: "openssl rand -base64 10", returnStdout: false).trim()
-                    def encrPassword = sh(script: "openssl passwd -1 ${tempPassword}", returnStdout: false).trim()
+                    def tempPassword = sh(script: "openssl rand -base64 10", returnStdout: true).trim()
+                    def encrPassword = sh(script: "openssl passwd -1 ${tempPassword}", returnStdout: true).trim()
 
                     sh '''
                         sudo useradd $LOGIN \
