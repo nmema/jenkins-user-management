@@ -32,7 +32,7 @@ pipeline {
                         sudo useradd ${params.login} \
                             -m -s /bin/bash -d /home/${params.login} \
                             -c "${params.name},${params.department}" \
-                            -p $(echo "${tempPassword}" | openssl passwd -1 -stdin)
+                            -p \$(echo "${tempPassword}" | openssl passwd -1 -stdin)
 
                         # Force password change on first login
                         sudo passwd -e ${params.login}
