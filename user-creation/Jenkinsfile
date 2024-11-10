@@ -31,7 +31,7 @@ pipeline {
                         sudo useradd ${params.login} \
                             -m -s /bin/bash -d /home/${params.login} \
                             -c "${params.name},${params.department}" \
-                            -p "${encPassword}"
+                            -p "${encrPassword}"
 
                         # Force password change on first login
                         sudo chage -d 0 ${params.login}
