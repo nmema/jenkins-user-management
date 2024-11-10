@@ -24,8 +24,8 @@ pipeline {
         stage('Create User') {
             steps {
                 script {
-                    def tempPassword = sh(script: "openssl rand -base64 10", , returnStdout: true).trim()
-                    def encrPassword = sh(script: "openssl passwd -1 ${tempPassword}", returnStdout: true).trim()
+                    def tempPassword = sh(script: "openssl rand -base64 10", returnStdout: false).trim()
+                    def encrPassword = sh(script: "openssl passwd -1 ${tempPassword}", returnStdout: false).trim()
 
                     sh '''
                         sudo useradd $LOGIN \
@@ -33,7 +33,7 @@ pipeline {
                             -c "$NAME,$DEPARTMENT" \
                             -p "$ENCR_PASSWORD"
 
-                        sudo chage -d 0 ${params.login}
+                        sudo chage -d 0 $LOGIN
                     ''', env: [
                         "LOGIN=${params.login}",
                         "NAME=${params.name}",
