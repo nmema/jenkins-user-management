@@ -31,14 +31,14 @@ pipeline {
                         sudo useradd $LOGIN \
                             -m -s /bin/bash -d /home/$LOGIN \
                             -c "$NAME,$DEPARTMENT" \
-                            -p "$ENC_PASSWORD"
+                            -p "$ENCR_PASSWORD"
 
                         sudo chage -d 0 ${params.login}
                     ''', env: [
                         "LOGIN=${params.login}",
                         "NAME=${params.name}",
                         "DEPARTMENT=${params.department}",
-                        "ENC_PASSWORD=${encPassword}"
+                        "ENCR_PASSWORD=${encrPassword}"
                     ]
 
                     echo "User ${params.login} created"
