@@ -8,14 +8,16 @@ pipeline {
     stages {
         stage('Validation') {
             steps {
-                if (!params.login) {
-                    error "Parameter 'login' is required."
-                }
-                if (!params.name) {
-                    error "Parameter 'name' is required."
-                }
-                if (!params.department) {
-                    error "Parameter 'department' is required."
+                script {
+                    if (!params.login) {
+                        error "Parameter 'login' is required."
+                    }
+                    if (!params.name) {
+                        error "Parameter 'name' is required."
+                    }
+                    if (!params.department) {
+                        error "Parameter 'department' is required."
+                    }
                 }
             }
         }
