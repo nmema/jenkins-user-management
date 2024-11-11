@@ -1,24 +1,46 @@
 pipeline {
     agent any
     parameters {
-        string(name: 'name', defaultValue: '', description: 'Ingresa un nombre')
-        string(name: 'age', defaultValue: '', description: 'Ingresa tu edad')
-        text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
-        booleanParam(name: 'TOGGLE', defaultValue: true, description: 'Toggle this value')
-        choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
-        password(name: 'PASSWORD', defaultValue: '', description: 'Enter a password')
-        booleanParam(name: 'FLAG', defaultValue: true, description: 'Toggle this value')
-    }
-    environment {
-        // Variables de entorno
-        ENV_VAR = 'Ahmed'
+        string(name: 'username', defaultValue: '', description: 'Username to delete from the server')
     }
     stages {
-        stage('Input') {
+        stage('Validation') {
             steps {
                 script {
-                    // Los parametros pueden ser accedidos mediante params.parameterName
-                    echo "Hola, ${env.ENV_VAR}! Tienes ${params.age} de edad."
+                    if (!params.username) {
+                        error "Parameter 'username' is required."
+                    }
+                
+                    def username = params.username.trim()
+
+                    def userExists = sh(
+                        script: """
+                            if id '${username}' >/dev/null 2>&1; then
+                                echo 'true'
+                            else
+                                echo 'false'
+                            fi
+                        """,
+                        returnStdout: true
+                    ).trim()
+
+                    if (userExists == 'false') {
+                        error "User ${params.username} does not exist."
+                    }
+
+                }
+            }
+        }
+        stage('Delete User') {
+            steps {
+                script {
+
+                    sh """
+                        # Delete user
+                        sudo userdel -rf ${params.username}
+                    """
+
+                    echo "User ${params.username} deleted"
                 }
             }
         }

@@ -18,7 +18,7 @@ sudo vim /etc/sudoers.d/jenkins
 ```
 3. Paste the following content.
 ```bash
-jenkins ALL=(ALL) NOPASSWD: /usr/sbin/useradd, /usr/bin/passwd
+jenkins ALL=(ALL) NOPASSWD: /usr/sbin/useradd, /usr/bin/passwd, /usr/sbin/userdel
 ```
 
 This will restrict Jenkins access to a set of commands.
