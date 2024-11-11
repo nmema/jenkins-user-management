@@ -30,6 +30,10 @@ jobs:
 
   - script: >
       pipelineJob('UserManagement/UserDeletion') {
+        description('Job that deletes user on Linux Server')
+        parameters {
+            stringParam('username', '', 'Username to delete from the server')
+        }
         definition {
           cpsScm {
             scm {
