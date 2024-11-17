@@ -4,6 +4,12 @@ Jenkins jobs for managing Linux system users, including tasks such as creating a
 ### Requirements
 - [Configuration as Code](https://plugins.jenkins.io/configuration-as-code/) Plugin
 - [Job DSL](https://plugins.jenkins.io/job-dsl/) Plugin
+- Groups created in the server, if not execute:
+```bash
+sudo groupadd accounting
+sudo groupadd finance
+sudo groupadd technology
+```
 
 
 ### Set Up
@@ -18,7 +24,7 @@ sudo vim /etc/sudoers.d/jenkins
 ```
 3. Paste the following content.
 ```bash
-jenkins ALL=(ALL) NOPASSWD: /usr/sbin/useradd, /usr/bin/passwd, /usr/sbin/userdel
+jenkins ALL=(ALL) NOPASSWD: /usr/sbin/useradd, /usr/bin/passwd, /usr/sbin/userdel, /usr/sbin/usermod
 ```
 
 This will restrict Jenkins access to a set of commands.
