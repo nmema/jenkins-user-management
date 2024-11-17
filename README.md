@@ -37,3 +37,6 @@ https://raw.githubusercontent.com/nmema/jenkins-user-management/refs/heads/main/
 5. In the Jenkins UI, go to `Manage Jenkins` -> `Configuration as Code` -> Paste the URL -> Click on `Apply new configuration`
 
 Now you should see the `UserManagement` folder on the Dashboard.
+
+### Diagram
+![diagram](data/diagram.png)
