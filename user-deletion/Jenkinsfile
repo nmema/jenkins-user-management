@@ -34,15 +34,20 @@ pipeline {
         stage('Delete User') {
             steps {
                 script {
-
-                    sh """
-                        # Delete user
-                        sudo userdel -rf ${params.username}
-                    """
-
-                    echo "User ${params.username} deleted"
+                    sh "sudo userdel -rf ${params.username}"
                 }
             }
+        }
+    }
+    post {
+        success {
+            echo "User ${params.username} deleted"
+        }
+        aborted {
+            echo "Job cancelled."
+        }
+        failure {
+            echo "User could not be deleted."
         }
     }
 }
