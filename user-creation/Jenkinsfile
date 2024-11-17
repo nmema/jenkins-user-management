@@ -1,3 +1,8 @@
+def tempPassword() {
+    def password = sh(script: "openssl rand -base64 10", returnStdout: true).trim()
+    return password
+}
+
 pipeline {
     agent any
     parameters {
@@ -21,27 +26,48 @@ pipeline {
                 }
             }
         }
+        stage('Create temporal password') {
+            steps {
+                script {
+                    env.PASSWORD = tempPassword()
+                    echo "Temporal password created."
+                }
+            }
+        }
         stage('Create User') {
             steps {
                 script {
-
-                    def tempPassword = sh(script: "openssl rand -base64 10", returnStdout: true).trim()
 
                     sh """
                         # Create user
                         sudo useradd ${params.login} \
                             -m -s /bin/bash -d /home/${params.login} \
                             -c "${params.name},${params.department}" \
-                            -p \$(echo "${tempPassword}" | openssl passwd -1 -stdin)
-
-                        # Force password change on first login
-                        sudo passwd -e ${params.login}
+                            -p \$(echo "${env.PASSWORD}" | openssl passwd -1 -stdin)
                     """
-
-                    echo "User ${params.login} created"
-                    echo "Password: ${tempPassword}"
                 }
             }
+        }
+        stage('Force password expiration') {
+            steps {
+                script {
+                    sh "sudo passwd -e ${params.login}"
+                }
+            }
+        }
+    }
+    post {
+        success {
+                echo "User ${params.login} created."
+                echo "Password: ${env.PASSWORD}"
+        }
+        aborted {
+            echo "Job cancelled."
+            sh "sudo userdel -rf ${params.login}"
+        }
+        failure {
+            echo "User could not be created."
+            sh "sudo userdel -rf ${params.login}"
         }
     }
 }
