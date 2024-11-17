@@ -45,9 +45,6 @@ pipeline {
                             -c "${params.name},${params.department}" \
                             -p \$(echo "${env.PASSWORD}" | openssl passwd -1 -stdin)
                     """
-
-                    echo "User ${params.login} created."
-                    echo "Password: ${env.PASSWORD}"
                 }
             }
         }
@@ -57,6 +54,20 @@ pipeline {
                     sh "sudo passwd -e ${params.login}"
                 }
             }
+        }
+    }
+    post {
+        success {
+                echo "User ${params.login} created."
+                echo "Password: ${env.PASSWORD}"
+        }
+        aborted {
+            echo "Job cancelled."
+            sh "sudo userdel -rf ${params.login}"
+        }
+        failure {
+            echo "User could not be created."
+            sh "sudo userdel -rf ${params.login}"
         }
     }
 }
